@@ -1,0 +1,1017 @@
+MAD  
+LAB 1 
+Mainactivity.java 
+package com.example.layoutmanager; 
+import android.os.Bundle; 
+import android.view.View; 
+import android.widget.Button; 
+import android.widget.EditText; 
+import android.widget.Toast; 
+import androidx.appcompat.app.AppCompatActivity; 
+public class MainActivity extends AppCompatActivity { 
+EditText etName, etAge; 
+Button btnSubmit; 
+@Override 
+protected void onCreate(Bundle savedInstanceState) { 
+super.onCreate(savedInstanceState); 
+setContentView(R.layout.activity_main); 
+etName = findViewById(R.id.etName); 
+etAge = findViewById(R.id.etAge); 
+btnSubmit = findViewById(R.id.btnSubmit); 
+btnSubmit.setOnClickListener(new View.OnClickListener() { 
+@Override 
+public void onClick(View view) { 
+String name = etName.getText().toString(); 
+Toast.makeText(MainActivity.this, 
+"Welcome " + name, 
+Toast.LENGTH_SHORT).show(); 
+} 
+}); 
+} 
+} 
+activity_main.xml 
+<?xml version="1.0" encoding="utf-8"?> 
+<LinearLayout 
+xmlns:android="http://schemas.android.com/apk/res/android" 
+android:layout_width="match_parent" 
+android:layout_height="match_parent" 
+android:orientation="vertical" 
+android:padding="20dp"> 
+<TextView 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content" 
+android:text="Student Registration" 
+android:textSize="24sp" 
+android:textStyle="bold"/> 
+<EditText 
+android:id="@+id/etName" 
+android:layout_width="match_parent" 
+android:layout_height="wrap_content" 
+android:hint="Enter Name"/> 
+<EditText 
+android:id="@+id/etAge" 
+android:layout_width="match_parent" 
+android:layout_height="wrap_content" 
+android:hint="Enter Age" 
+android:inputType="number"/> 
+<Button 
+android:id="@+id/btnSubmit" 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content" 
+android:text="Submit"/> 
+</LinearLayout> 
+LAB 2 
+Mainactivity.java 
+package com.example.eventlisteners; 
+import android.os.Bundle; 
+import android.view.View; 
+import android.widget.Button; 
+import android.widget.Toast; 
+import androidx.appcompat.app.AppCompatActivity; 
+public class MainActivity extends AppCompatActivity { 
+Button btnClick; 
+@Override 
+protected void onCreate(Bundle savedInstanceState) { 
+super.onCreate(savedInstanceState); 
+setContentView(R.layout.activity_main); 
+btnClick = findViewById(R.id.btnClick); 
+btnClick.setOnClickListener(new View.OnClickListener() { 
+@Override 
+public void onClick(View v) { 
+Toast.makeText( 
+MainActivity.this, 
+"Button Clicked!", 
+Toast.LENGTH_SHORT 
+).show(); 
+} 
+}); 
+} 
+} 
+activity_main.xml 
+<?xml version="1.0" encoding="utf-8"?> 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+android:layout_width="match_parent" 
+android:layout_height="match_parent" 
+android:orientation="vertical" 
+android:gravity="center"> 
+<Button 
+android:id="@+id/btnClick" 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content" 
+android:text="Click Me" /> 
+</LinearLayout> 
+LAB 3 
+Mainactivity.java 
+package com.example.adapters_toast; 
+import android.os.Bundle; 
+import android.widget.ArrayAdapter; 
+import android.widget.ListView; 
+import android.widget.Toast; 
+import androidx.appcompat.app.AppCompatActivity; 
+public class MainActivity extends AppCompatActivity { 
+ListView listView; 
+String[] fruits = { 
+"Jackfruit", 
+"Banana", 
+"Grapes", 
+"Apple", 
+"Mango" 
+}; 
+@Override 
+protected void onCreate(Bundle savedInstanceState) { 
+super.onCreate(savedInstanceState); 
+setContentView(R.layout.activity_main); 
+listView = findViewById(R.id.listView); 
+ArrayAdapter<String> adapter = new ArrayAdapter<>( 
+this, 
+android.R.layout.simple_list_item_1, 
+fruits 
+); 
+listView.setAdapter(adapter); 
+listView.setOnItemClickListener((parent, view, position, id) -> { 
+String selectedFruit = fruits[position]; 
+Toast.makeText( 
+MainActivity.this, 
+"You selected: " + selectedFruit, 
+Toast.LENGTH_SHORT 
+).show(); 
+}); 
+} 
+} 
+activity_main.xml 
+<?xml version="1.0" encoding="utf-8"?> 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+android:layout_width="match_parent" 
+android:layout_height="match_parent" 
+android:orientation="vertical" 
+android:padding="20dp"> 
+<TextView 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content" 
+android:text="Lists of Fruits" 
+android:textSize="24sp" 
+android:textStyle="bold"/> 
+<ListView 
+android:id="@+id/listView" 
+android:layout_width="match_parent" 
+android:layout_height="match_parent" /> 
+</LinearLayout> 
+LAB 4 
+Mainactivity.java 
+package com.studentdatabaseapp; 
+import android.database.Cursor; 
+import android.os.Bundle; 
+import android.widget.*; 
+import androidx.appcompat.app.AppCompatActivity; 
+public class MainActivity extends AppCompatActivity { 
+EditText editName, editRegister, editDepartment; 
+Button buttonSave, buttonDelete; 
+TextView textResult; 
+DatabaseHelper databaseHelper; 
+@Override 
+protected void onCreate(Bundle savedInstanceState) { 
+super.onCreate(savedInstanceState); 
+setContentView(R.layout.activity_main); 
+editName = findViewById(R.id.editName); 
+editRegister = findViewById(R.id.editRegister); 
+editDepartment = findViewById(R.id.editDepartment); 
+buttonSave = findViewById(R.id.buttonSave); 
+buttonDelete = findViewById(R.id.buttonDelete); 
+textResult = findViewById(R.id.textResult); 
+databaseHelper = new DatabaseHelper(this); 
+displayStudents(); 
+// SAVE STUDENT 
+buttonSave.setOnClickListener(v -> { 
+String name = editName.getText().toString().trim(); 
+String reg = editRegister.getText().toString().trim(); 
+String dept = editDepartment.getText().toString().trim(); 
+if (name.isEmpty() || reg.isEmpty() || dept.isEmpty()) { 
+Toast.makeText(this, "Enter all details", 
+Toast.LENGTH_SHORT).show(); 
+} else if (databaseHelper.insertStudent(name, reg, dept)) { 
+Toast.makeText(this, "Student Saved", 
+Toast.LENGTH_SHORT).show(); 
+editName.setText(""); 
+editRegister.setText(""); 
+editDepartment.setText(""); 
+displayStudents(); 
+} else { 
+Toast.makeText(this, "Save Failed", 
+Toast.LENGTH_SHORT).show(); 
+} 
+}); 
+// DELETE STUDENT 
+buttonDelete.setOnClickListener(v -> { 
+String reg = editRegister.getText().toString().trim(); 
+if (reg.isEmpty()) { 
+Toast.makeText(this, "Enter Register Number", 
+Toast.LENGTH_SHORT).show(); 
+} else if (databaseHelper.deleteStudent(reg)) { 
+Toast.makeText(this, "Student Deleted", 
+Toast.LENGTH_SHORT).show(); 
+editRegister.setText(""); 
+displayStudents(); 
+} else { 
+Toast.makeText(this, "Student Not Found", 
+Toast.LENGTH_SHORT).show(); 
+} 
+}); 
+} 
+// DISPLAY STUDENTS AUTOMATICALLY 
+private void displayStudents() { 
+Cursor c = databaseHelper.getAllStudents(); 
+StringBuilder result = new StringBuilder(); 
+while (c.moveToNext()) { 
+result.append("ID: ").append(c.getInt(0)) 
+.append("\nName: ").append(c.getString(1)) 
+.append("\nRegister No: ").append(c.getString(2)) 
+.append("\nDepartment: ").append(c.getString(3)) 
+.append("\n----------------------\n"); 
+} 
+c.close(); 
+textResult.setText(result.length() == 0 ? 
+"No students found." : result.toString()); 
+} 
+} 
+DataBaseHelper.java 
+package com.example.lab4_studentdatabaseapp; 
+import android.content.*; 
+import android.database.*; 
+import android.database.sqlite.*; 
+public class DatabaseHelper extends SQLiteOpenHelper { 
+public DatabaseHelper(Context context) { 
+super(context, "StudentDB.db", null, 1); 
+} 
+@Override 
+public void onCreate(SQLiteDatabase db) { 
+db.execSQL("CREATE TABLE students (id INTEGER PRIMARY KEY, " + 
+"name TEXT, register_no TEXT, department TEXT)"); 
+} 
+@Override 
+public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { 
+db.execSQL("DROP TABLE IF EXISTS students"); 
+onCreate(db); 
+} 
+// Insert Student with smallest available ID 
+public boolean insertStudent(String name, String reg, String dept) { 
+SQLiteDatabase db = getWritableDatabase(); 
+int id = 1; 
+Cursor c = db.rawQuery("SELECT id FROM students ORDER BY id", null); 
+while (c.moveToNext()) { 
+if (c.getInt(0) == id) id++; 
+else if (c.getInt(0) > id) break; 
+} 
+c.close(); 
+ContentValues values = new ContentValues(); 
+values.put("id", id); 
+values.put("name", name); 
+values.put("register_no", reg); 
+values.put("department", dept); 
+return db.insert("students", null, values) != -1; 
+} 
+// View All Students 
+public Cursor getAllStudents() { 
+return getReadableDatabase().rawQuery( 
+"SELECT * FROM students ORDER BY id", null); 
+} 
+// Delete Student 
+public boolean deleteStudent(String reg) { 
+return getWritableDatabase().delete( 
+"students", "register_no=?", new String[]{reg}) > 0; 
+} 
+} 
+activity_main.xml 
+<?xml version="1.0" encoding="utf-8"?> 
+<LinearLayout 
+xmlns:android="http://schemas.android.com/apk/res/android" 
+android:layout_width="match_parent" 
+android:layout_height="match_parent" 
+android:orientation="vertical" 
+android:padding="20dp"> 
+<TextView 
+android:layout_width="match_parent" 
+android:layout_height="wrap_content" 
+android:text="Student Database" 
+android:textSize="26sp" 
+android:textStyle="bold" 
+android:gravity="center" 
+android:padding="10dp"/> 
+<EditText 
+android:id="@+id/editName" 
+android:layout_width="match_parent" 
+android:layout_height="wrap_content" 
+        android:hint="Student Name" 
+        android:inputType="textPersonName"/> 
+ 
+    <EditText 
+        android:id="@+id/editRegister" 
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content" 
+        android:hint="Register Number" 
+        android:inputType="text"/> 
+ 
+    <EditText 
+        android:id="@+id/editDepartment" 
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content" 
+        android:hint="Department" 
+        android:inputType="text"/> 
+ 
+    <Button 
+        android:id="@+id/buttonSave" 
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content" 
+        android:text="SAVE STUDENT" 
+        android:layout_marginTop="15dp"/> 
+ 
+    <Button 
+        android:id="@+id/buttonDelete" 
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content" 
+        android:text="DELETE STUDENT"/> 
+ 
+    <TextView 
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content" 
+        android:text="Saved Student Details" 
+        android:textSize="20sp" 
+        android:textStyle="bold" 
+        android:layout_marginTop="15dp"/> 
+ 
+    <ScrollView 
+        android:layout_width="match_parent" 
+        android:layout_height="0dp" 
+        android:layout_weight="1"> 
+ 
+        <TextView 
+            android:id="@+id/textResult" 
+            android:layout_width="match_parent" 
+            android:layout_height="wrap_content" 
+            android:text="No students found." 
+android:textSize="16sp" 
+android:padding="10dp"/> 
+</ScrollView> 
+</LinearLayout> 
+LAB 5 
+1. AndroidManifest.xml 
+Add Internet permission above the <application> tag: 
+<uses-permission android:name="android.permission.INTERNET"/> 
+Mainactivity.java 
+package com.example.rssfeedreader; 
+import android.os.Bundle; 
+import android.widget.*; 
+import android.view.View; 
+import android.content.Intent; 
+import android.net.Uri; 
+import androidx.appcompat.app.AppCompatActivity; 
+import org.xmlpull.v1.XmlPullParser; 
+import android.util.Xml; 
+import java.net.URL; 
+import java.net.HttpURLConnection; 
+import java.util.ArrayList; 
+import java.util.concurrent.Executors; 
+public class MainActivity extends AppCompatActivity { 
+Button btnLoad; 
+ListView listView; 
+ArrayList<String> titles = new ArrayList<>(); 
+ArrayList<String> links = new ArrayList<>(); 
+ArrayAdapter<String> adapter; 
+String RSS_URL = "https://feeds.bbci.co.uk/news/rss.xml"; 
+@Override 
+protected void onCreate(Bundle savedInstanceState) { 
+super.onCreate(savedInstanceState); 
+setContentView(R.layout.activity_main); 
+btnLoad = findViewById(R.id.btnLoad); 
+listView = findViewById(R.id.listView); 
+adapter = new ArrayAdapter<>( 
+this, 
+android.R.layout.simple_list_item_1, 
+titles); 
+listView.setAdapter(adapter); 
+btnLoad.setOnClickListener(v -> loadRSS()); 
+listView.setOnItemClickListener((p, v, pos, id) -> { 
+startActivity(new Intent(Intent.ACTION_VIEW, 
+Uri.parse(links.get(pos)))); 
+}); 
+} 
+void loadRSS() { 
+btnLoad.setEnabled(false); 
+Executors.newSingleThreadExecutor().execute(() -> { 
+ArrayList<String> newTitles = new ArrayList<>(); 
+ArrayList<String> newLinks = new ArrayList<>(); 
+try { 
+HttpURLConnection con = 
+(HttpURLConnection) new URL(RSS_URL).openConnection(); 
+con.setConnectTimeout(10000); 
+con.setReadTimeout(10000); 
+XmlPullParser parser = Xml.newPullParser(); 
+parser.setInput(con.getInputStream(), null); 
+String title = "", link = ""; 
+int event = parser.getEventType(); 
+while (event != XmlPullParser.END_DOCUMENT) { 
+if (event == XmlPullParser.START_TAG) { 
+String tag = parser.getName(); 
+ 
+                        if (tag.equals("item")) { 
+                            title = ""; 
+                            link = ""; 
+                        } 
+ 
+                        else if (tag.equals("title") && 
+                                title.isEmpty()) { 
+                            title = parser.nextText(); 
+                        } 
+ 
+                        else if (tag.equals("link") && 
+                                link.isEmpty()) { 
+                            link = parser.nextText(); 
+                        } 
+                    } 
+ 
+                    else if (event == XmlPullParser.END_TAG && 
+                            parser.getName().equals("item")) { 
+ 
+                        if (!title.isEmpty() && !link.isEmpty()) { 
+                            newTitles.add(title); 
+                            newLinks.add(link); 
+                        } 
+                    } 
+ 
+                    event = parser.next(); 
+                } 
+ 
+                con.disconnect(); 
+ 
+} catch (Exception e) { 
+e.printStackTrace(); 
+} 
+runOnUiThread(() -> { 
+titles.clear(); 
+links.clear(); 
+titles.addAll(newTitles); 
+links.addAll(newLinks); 
+adapter.notifyDataSetChanged(); 
+btnLoad.setEnabled(true); 
+Toast.makeText(this, 
+titles.isEmpty() ? "Failed to load RSS feed" 
+: "RSS Feed Loaded", 
+Toast.LENGTH_SHORT).show(); 
+}); 
+}); 
+} 
+} 
+activity_main.xml 
+<?xml version="1.0" encoding="utf-8"?> 
+<LinearLayout 
+xmlns:android="http://schemas.android.com/apk/res/android" 
+android:layout_width="match_parent" 
+android:layout_height="match_parent" 
+android:orientation="vertical" 
+android:padding="10dp"> 
+<TextView 
+android:layout_width="match_parent" 
+android:layout_height="wrap_content" 
+android:text="RSS FEED READER" 
+android:textSize="24sp" 
+android:textStyle="bold" 
+android:gravity="center"/> 
+<Button 
+android:id="@+id/btnLoad" 
+android:layout_width="match_parent" 
+android:layout_height="wrap_content" 
+android:text="Load RSS Feed"/> 
+<ListView 
+android:id="@+id/listView" 
+android:layout_width="match_parent" 
+android:layout_height="match_parent"/> 
+</LinearLayout> 
+LAB 6 
+Mainactivity.java 
+package com.example.multithread; 
+import android.os.Bundle; 
+import android.widget.Button; 
+import android.widget.TextView; 
+import androidx.appcompat.app.AppCompatActivity; 
+ 
+public class MainActivity extends AppCompatActivity { 
+ 
+    TextView textResult; 
+    Button btnStart, btnStop; 
+ 
+    Thread thread; 
+    volatile boolean running = false; 
+ 
+    @Override 
+    protected void onCreate(Bundle savedInstanceState) { 
+        super.onCreate(savedInstanceState); 
+        setContentView(R.layout.activity_main); 
+ 
+        textResult = findViewById(R.id.textResult); 
+        btnStart = findViewById(R.id.btnStart); 
+        btnStop = findViewById(R.id.btnStop); 
+ 
+        btnStart.setOnClickListener(v -> { 
+ 
+            if (running) { 
+                return; 
+            } 
+ 
+            running = true; 
+ 
+            thread = new Thread(() -> { 
+ 
+                for (int i = 1; i <= 10; i++) { 
+ 
+                    if (!running) { 
+                        break; 
+                    } 
+ 
+                    final int count = i; 
+ 
+                    runOnUiThread(() -> { 
+                        textResult.setText("Count: " + count); 
+                    }); 
+ 
+                    try { 
+                        Thread.sleep(1000); 
+                    } 
+                    catch (InterruptedException e) { 
+                        Thread.currentThread().interrupt(); 
+                        break; 
+                    } 
+                } 
+ 
+                runOnUiThread(() -> { 
+                    if (running) { 
+                        textResult.setText("Thread Completed!"); 
+                    } else { 
+                        textResult.setText("Thread Stopped!"); 
+                    } 
+                    running = false; 
+                }); 
+ 
+            }); 
+ 
+            thread.start(); 
+        }); 
+ 
+        btnStop.setOnClickListener(v -> { 
+            running = false; 
+ 
+            if (thread != null) { 
+                thread.interrupt(); 
+            } 
+        }); 
+    } 
+} 
+ 
+activity_main.xml 
+ 
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent" 
+    android:layout_height="match_parent" 
+    android:orientation="vertical" 
+    android:gravity="center" 
+    android:padding="20dp"> 
+ 
+    <TextView 
+        android:id="@+id/textTitle" 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:text="Multithreading Application" 
+        android:textSize="24sp" 
+        android:textStyle="bold" 
+        android:layout_marginBottom="30dp"/> 
+ 
+    <TextView 
+        android:id="@+id/textResult" 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content" 
+android:text="Click Start Thread" 
+android:textSize="20sp" 
+android:layout_marginBottom="30dp"/> 
+<Button 
+android:id="@+id/btnStart" 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content" 
+android:text="Start Thread"/> 
+<Button 
+android:id="@+id/btnStop" 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content" 
+android:text="Stop Thread"/> 
+</LinearLayout> 
+LAB 7 
+Step 1: Add Internet permission 
+Open AndroidManifest.xml and add this permission before the <application> tag: 
+<uses-permission android:name="android.permission.INTERNET"/> 
+Mainactivity.java 
+package com.example.gpslocation; 
+import android.location.Address; 
+import android.location.Geocoder; 
+import android.os.Bundle; 
+import android.widget.*; 
+import androidx.appcompat.app.AppCompatActivity; 
+import java.io.IOException; 
+import java.util.List; 
+import java.util.Locale; 
+public class MainActivity extends AppCompatActivity { 
+EditText edtPlace; 
+    Button btnSearch; 
+    TextView txtLocation; 
+ 
+    @Override 
+    protected void onCreate(Bundle savedInstanceState) { 
+        super.onCreate(savedInstanceState); 
+        setContentView(R.layout.activity_main); 
+ 
+        edtPlace = findViewById(R.id.edtPlace); 
+        btnSearch = findViewById(R.id.btnSearch); 
+        txtLocation = findViewById(R.id.txtLocation); 
+ 
+        btnSearch.setOnClickListener(v -> searchLocation()); 
+    } 
+ 
+    void searchLocation() { 
+        String place = edtPlace.getText().toString().trim(); 
+ 
+        if (place.isEmpty()) { 
+            edtPlace.setError("Enter a place"); 
+            return; 
+        } 
+ 
+        txtLocation.setText("Searching..."); 
+ 
+        new Thread(() -> { 
+            try { 
+                Geocoder geocoder = new Geocoder(this, Locale.getDefault()); 
+                List<Address> addresses = 
+                        geocoder.getFromLocationName(place, 1); 
+ 
+                runOnUiThread(() -> { 
+                    if (addresses != null && !addresses.isEmpty()) { 
+                        Address address = addresses.get(0); 
+ 
+                        txtLocation.setText( 
+                                "Place: " + place + 
+                                        "\nLatitude: " + address.getLatitude() + 
+                                        "\nLongitude: " + address.getLongitude() 
+                        ); 
+                    } else { 
+                        txtLocation.setText("Place not found!"); 
+                    } 
+                }); 
+ 
+            } catch (IOException e) { 
+                runOnUiThread(() -> 
+                        txtLocation.setText("Unable to get location. Check internet.")); 
+} 
+}).start(); 
+} 
+} 
+activity_main.xml 
+<?xml version="1.0" encoding="utf-8"?> 
+<LinearLayout 
+xmlns:android="http://schemas.android.com/apk/res/android" 
+android:layout_width="match_parent" 
+android:layout_height="match_parent" 
+android:orientation="vertical" 
+android:gravity="center" 
+android:padding="20dp"> 
+<EditText 
+android:id="@+id/edtPlace" 
+android:layout_width="match_parent" 
+android:layout_height="wrap_content" 
+android:hint="Enter place name"/> 
+<Button 
+android:id="@+id/btnSearch" 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content" 
+android:text="Search Location"/> 
+<TextView 
+android:id="@+id/txtLocation" 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content" 
+android:text="Location details appear here" 
+android:textSize="18sp" 
+android:padding="20dp"/> 
+</LinearLayout> 
+LAB 8 
+Step 1: Add Internet permission 
+Open AndroidManifest.xml and add this permission before the <application> tag: 
+<uses-permission android:name="android.permission.INTERNET"/> 
+Mainactivity.java 
+package com.example.gpsstorage; 
+import android.content.Intent; 
+import android.net.Uri; 
+import android.location.*; 
+import android.os.Bundle; 
+import android.widget.*; 
+import androidx.appcompat.app.AppCompatActivity; 
+import java.io.OutputStream; 
+import java.io.IOException; 
+import java.util.*; 
+public class MainActivity extends AppCompatActivity { 
+EditText edtPlace; 
+Button btnSearch; 
+TextView txtLocation; 
+String data; 
+@Override 
+protected void onCreate(Bundle savedInstanceState) { 
+super.onCreate(savedInstanceState); 
+setContentView(R.layout.activity_main); 
+edtPlace = findViewById(R.id.edtPlace); 
+btnSearch = findViewById(R.id.btnSearch); 
+txtLocation = findViewById(R.id.txtLocation); 
+btnSearch.setOnClickListener(v -> searchLocation()); 
+} 
+void searchLocation() { 
+String place = edtPlace.getText().toString().trim(); 
+if (place.isEmpty()) { 
+edtPlace.setError("Enter place name"); 
+return; 
+} 
+new Thread(() -> { 
+try { 
+Geocoder geocoder = new Geocoder(this, Locale.getDefault()); 
+                List<Address> list = 
+                        geocoder.getFromLocationName(place, 1); 
+ 
+                runOnUiThread(() -> { 
+                    if (list != null && !list.isEmpty()) { 
+                        Address a = list.get(0); 
+ 
+                        data = "Place: " + place + 
+                                "\nLatitude: " + a.getLatitude() + 
+                                "\nLongitude: " + a.getLongitude(); 
+ 
+                        txtLocation.setText(data); 
+                        saveFile(); 
+                    } else { 
+                        txtLocation.setText("Place not found!"); 
+                    } 
+                }); 
+ 
+            } catch (IOException e) { 
+                runOnUiThread(() -> 
+                        txtLocation.setText("Location search failed")); 
+            } 
+        }).start(); 
+    } 
+ 
+    void saveFile() { 
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT); 
+        intent.setType("text/plain"); 
+        intent.addCategory(Intent.CATEGORY_OPENABLE); 
+        intent.putExtra(Intent.EXTRA_TITLE, "Location.txt"); 
+        startActivityForResult(intent, 1); 
+    } 
+ 
+    @Override 
+    protected void onActivityResult(int requestCode, 
+                                    int resultCode, Intent result) { 
+        super.onActivityResult(requestCode, resultCode, result); 
+ 
+        if (requestCode == 1 && resultCode == RESULT_OK 
+                && result != null) { 
+            Uri uri = result.getData(); 
+ 
+            try { 
+                OutputStream output = 
+                        getContentResolver().openOutputStream(uri); 
+ 
+                if (output != null) { 
+                    output.write(data.getBytes("UTF-8")); 
+                    output.close(); 
+                    Toast.makeText(this, "Saved successfully!", 
+                            Toast.LENGTH_SHORT).show(); 
+                } 
+ 
+            } catch (IOException e) { 
+                Toast.makeText(this, "File saving failed", 
+                        Toast.LENGTH_SHORT).show(); 
+            } 
+        } 
+    } 
+} 
+ 
+activity_main.xml 
+ 
+<?xml version="1.0" encoding="utf-8"?> 
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent" 
+    android:layout_height="match_parent" 
+    android:orientation="vertical" 
+    android:gravity="center" 
+    android:padding="20dp"> 
+ 
+    <EditText 
+        android:id="@+id/edtPlace" 
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content" 
+        android:hint="Enter place name"/> 
+ 
+    <Button 
+        android:id="@+id/btnSearch" 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:text="Search and Save"/> 
+ 
+    <TextView 
+        android:id="@+id/txtLocation" 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:text="Location details" 
+        android:textSize="18sp" 
+        android:padding="20dp"/> 
+ 
+</LinearLayout> 
+ 
+ 
+LAB 9 
+Step 1: Add permissions 
+Open AndroidManifest.xml and add these permissions before the <application> tag: 
+<uses-permission android:name="android.permission.SEND_SMS"/> 
+Mainactivity.java 
+package com.example.smsalert; 
+import android.Manifest; 
+import android.content.pm.PackageManager; 
+import android.os.Bundle; 
+import android.telephony.SmsManager; 
+import android.widget.*; 
+import androidx.appcompat.app.AppCompatActivity; 
+public class MainActivity extends AppCompatActivity { 
+EditText number, message; 
+Button send; 
+@Override 
+protected void onCreate(Bundle savedInstanceState) { 
+super.onCreate(savedInstanceState); 
+setContentView(R.layout.activity_main); 
+number = findViewById(R.id.number); 
+message = findViewById(R.id.message); 
+send = findViewById(R.id.send); 
+send.setOnClickListener(v -> { 
+if (number.getText().toString().isEmpty() || 
+message.getText().toString().isEmpty()) { 
+Toast.makeText(this, "Enter all details", 
+Toast.LENGTH_SHORT).show(); 
+} else if (checkSelfPermission(Manifest.permission.SEND_SMS) 
+!= PackageManager.PERMISSION_GRANTED) { 
+requestPermissions( 
+new String[]{Manifest.permission.SEND_SMS}, 1); 
+} else { 
+sendSMS(); 
+} 
+}); 
+} 
+    void sendSMS() { 
+        try { 
+            SmsManager sms = SmsManager.getDefault(); 
+            sms.sendTextMessage( 
+                    number.getText().toString(), 
+                    null, 
+                    message.getText().toString(), 
+                    null, null); 
+ 
+            Toast.makeText(this, "Message Sent Successfully", 
+                    Toast.LENGTH_SHORT).show(); 
+ 
+        } catch (Exception e) { 
+            Toast.makeText(this, "Message Sending Failed", 
+                    Toast.LENGTH_SHORT).show(); 
+        } 
+    } 
+ 
+    @Override 
+    public void onRequestPermissionsResult(int requestCode, 
+                                           String[] permissions, int[] results) { 
+        super.onRequestPermissionsResult(requestCode, permissions, results); 
+ 
+        if (requestCode == 1 && results.length > 0 && 
+                results[0] == PackageManager.PERMISSION_GRANTED) { 
+            sendSMS(); 
+        } 
+    } 
+} 
+ 
+activity_main.xml 
+ 
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent" 
+    android:layout_height="match_parent" 
+    android:orientation="vertical" 
+    android:padding="20dp" 
+    android:gravity="center"> 
+ 
+    <EditText 
+        android:id="@+id/number" 
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content" 
+        android:hint="Enter Mobile Number" 
+        android:inputType="phone"/> 
+ 
+<EditText 
+android:id="@+id/message" 
+android:layout_width="match_parent" 
+android:layout_height="wrap_content" 
+android:hint="Enter Alert Message"/> 
+<Button 
+android:id="@+id/send" 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content" 
+android:text="Send SMS"/> 
+</LinearLayout> 
+LAB 10 
+Mainactivity.java 
+package com.example.gameapp; 
+import android.os.Bundle; 
+import android.widget.*; 
+import androidx.appcompat.app.AppCompatActivity; 
+import java.util.Random; 
+public class MainActivity extends AppCompatActivity { 
+EditText guess; 
+TextView result; 
+int number; 
+void newGame() { 
+number = new Random().nextInt(10) + 1; 
+result.setText("Guess a number!"); 
+guess.setText(""); 
+} 
+@Override 
+protected void onCreate(Bundle savedInstanceState) { 
+super.onCreate(savedInstanceState); 
+setContentView(R.layout.activity_main); 
+guess = findViewById(R.id.guess); 
+result = findViewById(R.id.result); 
+Button check = findViewById(R.id.check); 
+        Button restart = findViewById(R.id.restart); 
+ 
+        newGame(); 
+ 
+        check.setOnClickListener(v -> { 
+            String s = guess.getText().toString(); 
+ 
+            if (s.isEmpty()) { 
+                guess.setError("Enter a number"); 
+                return; 
+            } 
+ 
+            int n = Integer.parseInt(s); 
+ 
+            if (n < 1 || n > 10) { 
+                result.setText("Enter between 1 and 10"); 
+            } else if (n == number) { 
+                result.setText("Congratulations! You Win!"); 
+            } else if (n < number) { 
+                result.setText("Too Low! Try Again"); 
+            } else { 
+                result.setText("Too High! Try Again"); 
+            } 
+        }); 
+ 
+        restart.setOnClickListener(v -> newGame()); 
+    } 
+} 
+ 
+activity_main.xml 
+ 
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent" 
+    android:layout_height="match_parent" 
+    android:gravity="center" 
+    android:orientation="vertical" 
+    android:padding="20dp"> 
+ 
+    <TextView 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:text="Guess the Number (1-10)" 
+        android:textSize="22sp"/> 
+ 
+    <EditText 
+        android:id="@+id/guess" 
+android:layout_width="match_parent" 
+android:layout_height="wrap_content" 
+android:hint="Enter your guess" 
+android:inputType="number"/> 
+<Button 
+android:id="@+id/check" 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content" 
+android:text="Check"/> 
+<TextView 
+android:id="@+id/result" 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content" 
+android:textSize="20sp" 
+android:padding="15dp"/> 
+<Button 
+android:id="@+id/restart" 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content" 
+android:text="Restart Game"/> 
+</LinearLayout> 
